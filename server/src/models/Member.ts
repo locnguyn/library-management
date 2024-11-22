@@ -6,4 +6,6 @@ const MemberSchema = new Schema<IMember>({
     email: { type: String, required: true, unique: true }
 });
 
+MemberSchema.index({name: 'text', email: 'text'});
+
 export const Member = mongoose.model<IMember>('Member', MemberSchema);
