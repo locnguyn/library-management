@@ -1,6 +1,7 @@
 "use client";
 import { Book } from "@/components/Books";
 import { ComboBox } from "@/components/ComboBox";
+import { DatePicker } from "@/components/DatePicker";
 import { Member } from "@/components/Members";
 import {
   AlertDialog,
@@ -13,6 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -49,7 +51,7 @@ interface LoanToPost {
   _id: string;
   book: string;
   member: string;
-  borrowDate: string;
+  returnDate: string;
 }
 
 export default function Loans() {
@@ -58,19 +60,16 @@ export default function Loans() {
   const [formData, setFormData] = useState<Partial<LoanToPost>>({
     book: "",
     member: "",
-    borrowDate: "",
+    returnDate: "",
   });
   const [editItem, setEditItem] = useState<LoanToPost | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [members, setMembers] = useState<Member[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
 
-  const [memberComboBoxOpen, setMemberComboBoxOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState("");
-
-  const [bookComboBoxOpen, setBookComboBoxOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState("");
-
+  const [returnDate, setReturnDate] = useState<Date>();
   useEffect(() => {
     fetchLoans();
     fetchBooks();
@@ -109,11 +108,12 @@ export default function Loans() {
     setFormData({
       book: "",
       member: "",
-      borrowDate: "",
+      returnDate: "",
     });
   };
 
   const handleOpen = (item: LoanToPost | null = null) => {
+    console.log(editItem);
     setOpen(true);
     if (item) {
       setFormData(item);
@@ -124,11 +124,20 @@ export default function Loans() {
   };
 
   const handleSubmit = async () => {
+    console.log(selectedMember,
+      selectedBook,
+      returnDate)
     try {
       if (editItem) {
-        await APIs.patch(getEndpoint(Endpoint.loans, editItem._id), formData);
+        await APIs.patch(getEndpoint(Endpoint.loans, editItem._id), {
+          returnDate
+        });
       } else {
-        await APIs.post(getEndpoint(Endpoint.loans), formData);
+        await APIs.post(getEndpoint(Endpoint.loans), {
+          member: selectedMember,
+          book: selectedBook,
+          returnDate
+        });
       }
       fetchLoans();
       setOpen(false);
@@ -163,9 +172,7 @@ export default function Loans() {
               <DialogTitle>{editItem ? "Edit Loan" : "Add Loan"}</DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
-              {editItem ? (
-                <></>
-              ) : (
+              {!editItem && (
                 <>
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="title" className="text-right">
@@ -178,17 +185,26 @@ export default function Loans() {
                     />
                   </div>
                   <div className="grid grid-cols-4 gap-4 items-center">
-                    <Label className="text-right" htmlFor="author">
+                    <Label className="text-right" htmlFor="book">
                       Book
                     </Label>
                     <ComboBox
                       items={books}
                       type="book"
-                      onSelect={setSelectedMember}
+                      onSelect={setSelectedBook}
                     />
                   </div>
                 </>
               )}
+              <div className="grid grid-cols-4 gap-4 items-center">
+                <Label className="text-right" htmlFor="book">
+                  Return Date
+                </Label>
+                <DatePicker
+                  placeholder="Return Date"
+                  onSelect={setReturnDate}
+                />
+              </div>
             </div>
             <DialogFooter>
               <DialogClose asChild>
@@ -221,15 +237,30 @@ export default function Loans() {
               <TableCell>{loan.member.name}</TableCell>
               <TableCell>{loan.member.email}</TableCell>
               <TableCell>{loan.book.title}</TableCell>
-              <TableCell>{(new Date(loan.borrowDate)).toLocaleDateString('vi')}</TableCell>
-              <TableCell>{(new Date(loan.returnDate)).toLocaleDateString('vi')}</TableCell>
-              <TableCell>{true}</TableCell>
+              <TableCell>
+                {new Date(loan.borrowDate).toLocaleDateString("vi")}
+              </TableCell>
+              <TableCell>
+                {new Date(loan.returnDate).toLocaleDateString("vi")}
+              </TableCell>
+              <TableCell className="text-center">
+                {new Date() >=
+                new Date(
+                  new Date(loan.returnDate).setDate(
+                    new Date(loan.returnDate).getDate() + 1
+                  )
+                ) ? (
+                  <Badge variant="destructive">Yes</Badge>
+                ) : (
+                  <Badge variant="success">No</Badge>
+                )}
+              </TableCell>
               <TableCell className="space-x-2 text-right">
                 <Button
                   variant="outline"
                   //   size="icon"
                   onClick={() =>
-                    handleOpen({ borrowDate: loan.borrowDate } as LoanToPost)
+                    handleOpen({ returnDate: loan.returnDate } as LoanToPost)
                   }
                 >
                   Extend
