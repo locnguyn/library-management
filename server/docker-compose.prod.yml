@@ -1,0 +1,24 @@
+services:
+  book-api:
+    build:
+      context: .
+      target: production
+    ports:
+      - 9000:8000
+  mongodb:
+    image: mongo:latest
+    container_name: "library"
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=admin123
+
+networks:
+  my-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
