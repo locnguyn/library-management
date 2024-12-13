@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = process.env.BASE_URL || 'http://localhost:8000/api';
+const baseUrl = process.env.BASE_URL || 'http://localhost:9000/api';
 
 export enum Endpoint {
     members = 'member',

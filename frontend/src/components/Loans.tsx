@@ -124,19 +124,17 @@ export default function Loans() {
   };
 
   const handleSubmit = async () => {
-    console.log(selectedMember,
-      selectedBook,
-      returnDate)
+    console.log(selectedMember, selectedBook, returnDate);
     try {
       if (editItem) {
         await APIs.patch(getEndpoint(Endpoint.loans, editItem._id), {
-          returnDate
+          returnDate,
         });
       } else {
         await APIs.post(getEndpoint(Endpoint.loans), {
           member: selectedMember,
           book: selectedBook,
-          returnDate
+          returnDate,
         });
       }
       fetchLoans();
@@ -260,7 +258,10 @@ export default function Loans() {
                   variant="outline"
                   //   size="icon"
                   onClick={() =>
-                    handleOpen({ returnDate: loan.returnDate } as LoanToPost)
+                    handleOpen({
+                      returnDate: loan.returnDate,
+                      _id: loan._id,
+                    } as LoanToPost)
                   }
                 >
                   Extend
@@ -296,7 +297,7 @@ export default function Loans() {
                         Cancel
                       </AlertDialogCancel>
                       <AlertDialogAction onClick={() => handleDelete(loan._id)}>
-                        Delete
+                        Confirm
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
