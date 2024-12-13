@@ -183,7 +183,7 @@ export default function Members() {
         <Input
           placeholder="Search Members"
           value={searchTerm}
-          onChange={(e: any) => setSearchTerm(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
           onKeyUp={(e: React.KeyboardEvent) =>
             e.key === "Enter" && handleSearch()
           }

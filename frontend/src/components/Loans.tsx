@@ -25,7 +25,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -34,9 +33,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import APIs, { Endpoint, getEndpoint } from "@/lib/APIs";
-import { Pencil1Icon, PlusIcon } from "@radix-ui/react-icons";
+import { PlusIcon } from "@radix-ui/react-icons";
 import { Label } from "@radix-ui/react-label";
-import { ArrowLeftToLine, TrashIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Loan {
@@ -57,11 +55,6 @@ interface LoanToPost {
 export default function Loans() {
   const [loans, setLoans] = useState<Loan[]>([]);
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState<Partial<LoanToPost>>({
-    book: "",
-    member: "",
-    returnDate: "",
-  });
   const [editItem, setEditItem] = useState<LoanToPost | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [members, setMembers] = useState<Member[]>([]);
@@ -105,18 +98,12 @@ export default function Loans() {
 
   const clearForm = () => {
     setEditItem(null);
-    setFormData({
-      book: "",
-      member: "",
-      returnDate: "",
-    });
   };
 
   const handleOpen = (item: LoanToPost | null = null) => {
     console.log(editItem);
     setOpen(true);
     if (item) {
-      setFormData(item);
       setEditItem(item);
     } else {
       clearForm();

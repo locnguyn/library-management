@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { Toaster } from "@/components/ui/toaster"
 import Navbar from '@/components/Navbar'
-import { ThemeProvider } from '@/components/ThemeProvider'
 import Sidebar from '@/components/Sidebar'
 import "./globals.css"
 
@@ -38,7 +36,6 @@ export default function RootLayout({
               </main>
             </div>
           </div>
-          <Toaster />
         {/* </ThemeProvider> */}
       </body>
     </html>

@@ -221,7 +221,7 @@ export default function Books() {
         <Input
           placeholder="Search Books"
           value={searchTerm}
-          onChange={(e: any) => setSearchTerm(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.currentTarget.value)}
           onKeyUp={(e: React.KeyboardEvent) =>
             e.key === "Enter" && handleSearch()
           }
