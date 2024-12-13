@@ -2,6 +2,7 @@
 import { Book } from "@/components/Books";
 import { ComboBox } from "@/components/ComboBox";
 import { DatePicker } from "@/components/DatePicker";
+import { MemberComboBox } from "@/components/MemberComboBox";
 import { Member } from "@/components/Members";
 import {
   AlertDialog,
@@ -163,7 +164,7 @@ export default function Loans() {
                     <Label htmlFor="title" className="text-right">
                       Member
                     </Label>
-                    <ComboBox
+                    <MemberComboBox
                       items={members}
                       type="member"
                       onSelect={setSelectedMember}

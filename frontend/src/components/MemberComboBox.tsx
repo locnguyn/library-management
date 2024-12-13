@@ -1,5 +1,5 @@
 "use client";
-import { Book } from "@/components/Books";
+import { Member } from "@/components/Members";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -19,12 +19,12 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 
 interface ComboBoxProps {
-  items: Book[];
+  items: Member[];
   type: string;
   onSelect: (value: string) => void;
 }
 
-export function ComboBox({ items, type, onSelect }: ComboBoxProps) {
+export function MemberComboBox({ items, type, onSelect }: ComboBoxProps) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
@@ -38,7 +38,7 @@ export function ComboBox({ items, type, onSelect }: ComboBoxProps) {
           className="w-full col-span-3 justify-between"
         >
           {value
-            ? items.find((item) => item._id === value)?.title ||
+            ? items.find((item) => item._id === value)?.name ||
               "Selected"
             : `Select ${type}...`}
           <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
@@ -60,7 +60,7 @@ export function ComboBox({ items, type, onSelect }: ComboBoxProps) {
                     setOpen(false);
                   }}
                 >
-                  {item.title}
+                  {item.name}
                   <Check
                     className={cn(
                       "ml-auto h-4 w-4",
